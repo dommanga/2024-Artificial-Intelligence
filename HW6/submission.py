@@ -267,7 +267,38 @@ def get_sum_variable(csp, name, variables, maxSum):
     """
     # Problem 3a
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError
+
+    result = ('sum', name, 'aggregated')
+    csp.add_variable(result, list(range(maxSum+1)))
+
+    # no input variable, result should be 0
+    if len(variables) == 0:
+        csp.add_unary_factor(result, lambda val: val == 0)
+        return result
+    
+    domain_aux = [(i, j) for i in range(maxSum+1) for j in range(maxSum+1)]
+    
+    for i, X_i in enumerate(variables):
+        
+        A_i = ('aux', name, i)
+        csp.add_variable(A_i, domain_aux)
+        
+        # Initializatoin
+        if i == 0:
+            csp.add_unary_factor(A_i, lambda a: a[0] == 0)
+            
+        # Processing
+        csp.add_binary_factor(A_i, X_i, lambda a, x: a[1] == a[0] + x)
+        
+        # Consistency
+        if i > 0:
+            csp.add_binary_factor(A_i, ('aux', name, i-1), lambda a, b: a[0] == b[1])
+    
+    # consistency between A_n and result
+    csp.add_binary_factor(A_i, result, lambda a, b: a[1] == b)
+    
+    return result
+    
     # END_YOUR_ANSWER
 
 def create_lightbulb_csp(buttonSets, numButtons):
@@ -290,6 +321,16 @@ def create_lightbulb_csp(buttonSets, numButtons):
 
     # Problem 3b
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError
+
+    domain = [0, 1]
+    buttons = [i for i in range(numButtons)]
+    
+    for button in buttons:
+        csp.add_variable(button, domain)
+    
+    for bulb, buttonSet in enumerate(buttonSets):
+        sumVar = get_sum_variable(csp, f'buttons-for-bulb-{bulb}', list(buttonSet), len(buttonSet))
+        csp.add_unary_factor(sumVar, lambda x: (x % 2) == 1)
+    
     # END_YOUR_ANSWER
     return csp
