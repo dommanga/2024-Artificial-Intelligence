@@ -14,7 +14,13 @@ def create_chain_csp(n):
     csp = util.CSP()
     # Problem 1a
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError
+
+    for var in variables:
+        csp.add_variable(var, domain)
+    
+    for var1, var2 in zip(variables[:-1], variables[1:]):
+        csp.add_binary_factor(var1, var2, lambda x, y : x != y)
+    
     # END_YOUR_ANSWER
     return csp
 
@@ -35,7 +41,18 @@ def create_nqueens_csp(n = 8):
     csp = util.CSP()
     # Problem 2a
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError
+    
+    domain = [i for i in range(1, n+1)]
+    queens = [i for i in range(1, n+1)]
+    
+    for q in queens:
+        csp.add_variable(q, domain)
+    
+    for _, q1 in enumerate(queens, start=1):
+        for q2 in queens[_:]:
+            csp.add_binary_factor(q1, q2, lambda x, y : x != y)
+            csp.add_binary_factor(q1, q2, lambda x, y : abs(q2 - q1) != abs(y - x))
+
     # END_YOUR_ANSWER
     return csp
 
@@ -211,7 +228,17 @@ class BacktrackingSearch():
             #       assignment, a variable, and a proposed value to this variable
             # Hint: for ties, choose the variable with lowest index in self.csp.variables
             # BEGIN_YOUR_ANSWER
-            raise NotImplementedError
+
+            unassigned = [var for var in self.csp.variables if var not in assignment]
+            
+            remaining_domain = []
+            
+            for var in unassigned:
+                remain = sum(self.get_delta_weight(assignment, var, val) > 0 for val in self.domains[var])
+                remaining_domain.append(remain)
+            
+            return min(zip(unassigned, remaining_domain), key=lambda x: x[1])[0]
+            
             # END_YOUR_ANSWER
 
 
