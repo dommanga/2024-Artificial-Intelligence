@@ -1,0 +1,58 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx}
+
+\begin{document}
+
+\begin{center}
+{\Large CSED342 Assignment 8 \vspace{10pt}}
+
+\begin{tabular}{rl}
+Student ID: & 20210212 \\
+Name: & Jimin Lee \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+By turning in this assignment, I agree by the POSTECH honor code and declare that all of this is my own work.
+\end{center}
+
+\section*{Problem 2a}
+$KB = \{(A \land B) \xrightarrow{} \neg C, \neg(\neg A \lor C) \xrightarrow{} D, A\}$ \\
+\begin{enumerate}[label=(\roman*)]
+    \item\text First, let's convert this $KB$ into CNF forms.
+        \begin{align*}
+            {(A \land B) \xrightarrow{} \neg C} \quad &\Rightarrow \quad {\neg(A \lor B) \lor \neg C} \quad \\&\Rightarrow \quad {(\neg A \land \neg B) \lor \neg C} \quad \\&\Rightarrow \quad {(\neg A \lor \neg C) \land (\neg B \lor \neg C)} \quad \\&\Rightarrow \quad {\neg A \lor \neg C, \quad \neg B \lor \neg C} \\ \\
+            {\neg(\neg A \lor C) \xrightarrow{} D} \quad &\Rightarrow \quad {\neg A \lor C \lor D}
+        \end{align*}
+    $KB = \{{\neg A \lor \neg C, \neg B \lor \neg C}, {\neg A \lor C \lor D}, A\}$ \\
+    \item\text Secondly, let's apply Modus Ponens inference rule. \\
+        \begin{align*}
+            \frac{A, \neg A \lor \neg C}{\neg C} \quad &\Rightarrow \quad KB = \{{\neg A \lor \neg C, \neg B \lor \neg C}, {\neg A \lor C \lor D}, A,\neg C\} \\
+            \frac{A, \neg A \lor C \lor D}{C \lor D} \quad &\Rightarrow \quad KB = \{{\neg A \lor \neg C, \neg B \lor \neg C}, {\neg A \lor C \lor D}, A,\neg C, C \lor D\} \\
+            \frac{\neg C, C \lor D}{D} \quad &\Rightarrow \quad KB = \{{\neg A \lor \neg C, \neg B \lor \neg C}, {\neg A \lor C \lor D}, A,\neg C, C \lor D, D\} \\
+        \end{align*}
+\end{enumerate}
+\text Finally, we derived D. \\
+
+\newpage
+
+\section*{Problem 2b}
+$KB = \{A \lor B, B \xrightarrow{} C, ( A \lor C) \xrightarrow{} D\}$ \\
+\begin{enumerate}[label=(\roman*)]
+    \item\text First, let's convert this $KB$ into CNF forms.
+        \begin{align*}
+            {B \xrightarrow{} C} \quad &\Rightarrow \quad {\neg B \lor C} \\ \\
+            {(A \lor C) \xrightarrow{} D} \quad &\Rightarrow \quad { \neg (A \lor C) \lor D} \quad \\&\Rightarrow \quad {(\neg A \land \neg C) \lor D} \quad \\&\Rightarrow \quad {(\neg A \lor D) \land (\neg C \lor D)} \quad \\&\Rightarrow \quad {\neg A \lor D, \neg C \lor D}
+        \end{align*}
+    $KB = \{{A \lor B}, {\neg B \lor C}, {\neg A \lor D}, {\neg C \lor D}\}$ \\
+
+    \item\text Secondly, let's apply Resolution inference rule. \\
+        \begin{align*}
+            \frac{A \lor B, \neg B \lor C}{A \lor C} \quad &\Rightarrow \quad KB = \{{A \lor B}, {\neg B \lor C}, {\neg A \lor D}, {\neg C \lor D}, {A \lor C} \} \\
+            \frac{A \lor C, \neg C \lor D}{A \lor D} \quad &\Rightarrow \quad KB = \{{A \lor B}, {\neg B \lor C}, {\neg A \lor D}, {\neg C \lor D}, {A \lor C}, {A \lor D} \} \\
+            \frac{D \lor \neg A, A \lor D}{D \lor D} \quad &\Rightarrow \quad KB = \{{A \lor B}, {\neg B \lor C}, {\neg A \lor D},{\neg C \lor D}, {A \lor C}, {A \lor D}, {D} \} \\ &(\because \quad D \lor D \Rightarrow D)
+        \end{align*}
+\end{enumerate}
+\text Finally, we derived D. \\
+
+\end{document}
