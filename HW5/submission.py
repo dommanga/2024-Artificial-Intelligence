@@ -558,13 +558,11 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
       elif d == 0:
         return None, self.evaluationFunction(s)
       else:
-        actions_and_values = [(a, alphabeta(s.generateSuccessor(p, a), d - (p == s.getNumAgents() - 1), alpha, beta, (p + 1) % s.getNumAgents())[1]) for a in s.getLegalActions(p)]
-        
         if p == 0: # (pac-man agent), max
           action_and_value = None, -float('inf')
-
-          for _ in actions_and_values:
-            action_and_value = max((action_and_value, _), key=lambda x: x[1])
+          
+          for a in s.getLegalActions(p):
+            action_and_value = max(action_and_value, (a, alphabeta(s.generateSuccessor(p, a), d - (p == s.getNumAgents() - 1), alpha, beta, (p + 1) % s.getNumAgents())[1]), key=lambda x: x[1])
             alpha = max(alpha, action_and_value[1])
             if beta <= alpha: break
           return action_and_value
@@ -572,13 +570,15 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         elif p % 2 == 1: # p is odd, min ghost agent
           action_and_value = None, float('inf')
           
-          for _ in actions_and_values:
-            action_and_value = min((action_and_value, _), key=lambda x: x[1])
+          for a in s.getLegalActions(p):
+            action_and_value = min(action_and_value, (a, alphabeta(s.generateSuccessor(p, a), d - (p == s.getNumAgents() - 1), alpha, beta, (p + 1) % s.getNumAgents())[1]), key=lambda x: x[1])
             beta = min(beta, action_and_value[1])
             if beta <= alpha: break
           return action_and_value
           
         else: # p is even, expect ghost agent
+          actions_and_values = [(a, alphabeta(s.generateSuccessor(p, a), d - (p == s.getNumAgents() - 1), alpha, beta, (p + 1) % s.getNumAgents())[1]) for a in s.getLegalActions(p)]
+          
           if not actions_and_values:
             return None, 0
           
@@ -586,7 +586,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
           expect_value = sum([pi_p * action_value[1] for action_value in actions_and_values])
           chosen_action = random.choice(actions_and_values)[0]
           return chosen_action, expect_value
-
+        
     return alphabeta(gameState, self.depth, -float('inf'), float('inf'), self.index)[0]
   
     # END_YOUR_ANSWER
